@@ -29,14 +29,15 @@ int main(void)
 		if(lavoidance==1 && ravoidance==1 && linspection==0 && rinspection==0)  // 没有障碍,并且不压线
 			TankRun('F');
 		else if(lavoidance==0 && ravoidance==1)  // 左边有障碍
-		{
-			TankRun('R');
+		{	
 			Delay(1);
+			TankRun('R');	
 		}
 		else if(lavoidance==1 && ravoidance==0)  // 右边有障碍
 		{
-			TankRun('L');
 			Delay(1);
+			TankRun('L');
+			
 		}
 		else if(lavoidance==0 && ravoidance==0)  // 前面有障碍
 		{
@@ -68,8 +69,6 @@ void Delay(unsigned char num)
         while(temp--);
     }
 }
-
-
 
 /***********************************
 *函数名称：void TankRun(unsigned char dire)
@@ -134,13 +133,13 @@ void TankRun(unsigned char dire)
 ***********************************/
 void FlashLED()
 {
-						led_S=1;//中间杠
-						led_LF=1;//左前杠
-						led_LB=1;//左后杠
-						led_B=1;//后杠
-						led_RB=1;//右后杠
-						led_RF=1;//右前杠
-						led_F=1;//前杠
+	led_S=1;//中间杠
+	led_LF=1;//左前杠
+	led_LB=1;//左后杠
+	led_B=1;//后杠
+	led_RB=1;//右后杠
+	led_RF=1;//右前杠
+	led_F=1;//前杠
 }
 /**********************************
 ***********************************/
