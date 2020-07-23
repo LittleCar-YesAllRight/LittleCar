@@ -1,4 +1,4 @@
 ".\Objects\STARTUP.obj",
-".\Objects\HelloWorld.obj" 
+".\Objects\AvoidanceAndIndicate.obj" 
 TO ".\Objects\51STC89C52RC" 
 PRINT(".\Listings\51STC89C52RC.m51") RAMSIZE(256) 
