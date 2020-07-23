@@ -1,0 +1,292 @@
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 16:33:00 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE AVOIDANCEANDINDICATE
+OBJECT MODULE PLACED IN .\Objects\AvoidanceAndIndicate.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE AvoidanceAndIndicate.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT
+                    -(.\Listings\AvoidanceAndIndicate.lst) TABS(2) OBJECT(.\Objects\AvoidanceAndIndicate.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          #define turn_time 1
+   3          sbit led_S=P0^1;  // 中间杠
+   4          sbit led_LF=P0^2;  // 左前杠
+   5          sbit led_LB=P0^3;  // 左后杠
+   6          sbit led_B=P0^4;  // 后杠
+   7          sbit led_RB=P0^5;  // 右后杠
+   8          sbit led_RF=P0^6;  // 右前杠
+   9          sbit led_F=P0^7;  // 前杠
+  10          sbit moto_RF=P1^6;
+  11          sbit moto_RB=P1^5;
+  12          sbit moto_LF=P1^4;
+  13          sbit moto_LB=P1^3;
+  14          // 红外避障串口,有障碍为0
+  15          sbit lavoidance=P3^4;  // 左红外
+  16          sbit ravoidance=P3^5;  // 右红外
+  17          // 巡线串口, 压线为0
+  18          sbit linspection=P3^7;  // 左巡线
+  19          sbit rinspection=P3^6;  // 右巡线
+  20          void Delay(unsigned char num);
+  21          void CarRun(unsigned char dire,unsigned char mode);
+  22          void FlashLED();
+  23          
+  24          int main(void)                                                                                            
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 16:33:00 PAGE 2   
+
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 16:33:00 PAGE 3   
+
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                         
+  25          {
+  26   1        while(1)
+  27   1        {
+  28   2          // 避障
+  29   2          if(lavoidance==1 && ravoidance==1 && linspection==0 && rinspection==0)  // 没有障碍,并且不压线
+  30   2            CarRun('F','T');
+  31   2          else if(lavoidance==0 && ravoidance==1)  // 左边有障碍
+  32   2          {
+  33   3            CarRun('R','T');
+  34   3            Delay(turn_time);
+  35   3          }
+  36   2          else if(lavoidance==1 && ravoidance==0)  // 右边有障碍
+  37   2          {
+  38   3            CarRun('L','T');
+  39   3            Delay(turn_time);
+  40   3          }
+  41   2          else if(lavoidance==0 && ravoidance==0)  // 前面有障碍
+  42   2          {
+  43   3            CarRun('L','B');
+  44   3          }
+  45   2          //巡线
+  46   2          if(linspection==0 && rinspection==1)
+  47   2            CarRun('R','F');
+  48   2          else if(linspection==1 && rinspection==0)
+  49   2            CarRun('L','F');
+  50   2          else if(linspection==1 && rinspection==1)
+  51   2            CarRun('S','T');
+  52   2        }
+  53   1      }
+  54          
+  55          /***********************************
+  56          *函数名称:void Delay(unsigned char num)
+  57          *函数功能:延时
+  58          *参数说明:num 延时时间 值最大255
+  59          
+  60          ***********************************/
+  61          void Delay(unsigned char num)
+  62          {
+  63   1          unsigned int temp=0;
+  64   1          while(num--)
+  65   1          {
+  66   2              temp=2000;
+  67   2              while(temp--);
+  68   2          }
+  69   1      }
+  70          /***********************************
+  71          
+  72          
+  73          
+  74          /***********************************
+  75          *函数名称：void CarRun(unsigned char dire)
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 16:33:00 PAGE 4   
+
+  76          *函数功能：行进方向控制
+  77          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
+  78                     mode 转向方式 'F'：一前一停   'B'：一后一停   'T'：坦克式，一前一后
+  79          
+  80          ***********************************/
+  81          void CarRun(unsigned char dire,unsigned char mode)
+  82          {
+  83   1          switch (dire)
+  84   1          {
+  85   2              case 'S':             //停止
+  86   2                  FlashLED();
+  87   2                  moto_RF=0;
+  88   2                  moto_RB=0;
+  89   2                  moto_LF=0;
+  90   2                  moto_LB=0;
+  91   2                  led_S=0;
+  92   2                  break;
+  93   2              case 'F':            //前进
+  94   2                  FlashLED();
+  95   2                  moto_RF=1;
+  96   2                  moto_RB=0;
+  97   2                  moto_LF=1;
+  98   2                  moto_LB=0;
+  99   2                  led_F=0;
+ 100   2                  break;
+ 101   2              case 'B':            //后退 
+ 102   2                  FlashLED();       
+ 103   2                  moto_RF=0;
+ 104   2                  moto_RB=1;
+ 105   2                  moto_LF=0;
+ 106   2                  moto_LB=1;
+ 107   2                  led_B=0;
+ 108   2            break;
+ 109   2              case 'L':            //左转        
+ 110   2                  FlashLED();
+ 111   2                  if(mode=='B')
+ 112   2                    moto_RF=0;
+ 113   2                  else
+ 114   2                  {
+ 115   3                    moto_RF=1;
+ 116   3                    led_LF=0;
+ 117   3                  }
+ 118   2                  moto_RB=0;
+ 119   2                  moto_LF=0;
+ 120   2                  if(mode=='F')
+ 121   2                    moto_LB=0;
+ 122   2                  else
+ 123   2                  {
+ 124   3                    moto_LB=1;
+ 125   3                    led_LB=0;
+ 126   3                  }
+ 127   2            break;
+ 128   2              case 'R':            //右转
+ 129   2                  FlashLED();
+ 130   2                  moto_RF=0;
+ 131   2                  if(mode='F')
+*** WARNING C276 IN LINE 131 OF AvoidanceAndIndicate.c: constant in condition expression
+ 132   2                    moto_RB=0
+ 133   2                  else
+*** ERROR C141 IN LINE 133 OF AvoidanceAndIndicate.c: syntax error near 'else'
+ 134   2                  {
+ 135   3                    moto_RB=1;
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 16:33:00 PAGE 5   
+
+ 136   3                    led_RB=0;
+ 137   3                  }
+ 138   2                  if(mode='F')
+ 139   2                    moto_LF=0;
+ 140   2                  else
+ 141   2                  {
+ 142   3                    moto_LF=1;
+ 143   3                    led_RF=0;
+ 144   3                  }
+ 145   2                  moto_LB=0;
+ 146   2            break;
+ 147   2          }
+ 148   1      }
+ 149          
+ 150          /***********************************
+ 151          *函数名称：void Led(unsigned char dire)
+ 152          *函数功能：行进方向控制
+ 153          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
+ 154          
+ 155          ***********************************/
+ 156          void FlashLED()
+ 157          {
+ 158   1                  led_S=1;//中间杠
+ 159   1                  led_LF=1;//左前杠
+ 160   1                  led_LB=1;//左后杠
+ 161   1                  led_B=1;//后杠
+ 162   1                  led_RB=1;//右后杠
+ 163   1                  led_RF=1;//右前杠
+ 164   1                  led_F=1;//前杠
+ 165   1      }
+ 166          /**********************************
+ 167          ***********************************/
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
