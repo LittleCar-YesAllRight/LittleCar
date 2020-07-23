@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:41:07 PAGE 1   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:58:36 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE AVOIDANCEANDINDICATE
@@ -9,7 +9,7 @@ COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE AvoidanceAndIndicate.c OPTIMIZE(
 line level    source
 
    1          #include "reg52.h"
-   2          #define turn_time 5
+   2          #define turn_time 1
    3          // 数字灯
    4          sbit led_S=P0^1;  // 中间杠
    5          sbit led_LF=P0^2;  // 左前杠
@@ -62,7 +62,7 @@ line level    source
              -                                                                                                                        
              -                                                                                                                        
              -                                                                                                                        
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:41:07 PAGE 2   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:58:36 PAGE 2   
 
              -                                                                                                                        
              -                                                                                                                        
@@ -126,7 +126,7 @@ line level    source
              -                                                                                                                        
              -                                                                                                                        
              -                                                                                                                        
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:41:07 PAGE 3   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:58:36 PAGE 3   
 
              -                                                                                                                        
              -                                                                                                                        
@@ -190,7 +190,7 @@ line level    source
   73          *函数功能:延时
   74          *参数说明:num 延时时间 值最大255
   75          
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:41:07 PAGE 4   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:58:36 PAGE 4   
 
   76          ***********************************/
   77          void Delay(unsigned short num)
@@ -203,104 +203,102 @@ line level    source
   84   2          }
   85   1      }
   86          
-  87          
-  88          
-  89          /***********************************
-  90          *函数名称：void CarRun(unsigned char dire)
-  91          *函数功能：行进方向控制
-  92          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
-  93                     mode 转向方式 'F'：一前一停   'B'：一后一停   'T'：坦克式，一前一后
-  94          
-  95          ***********************************/
-  96          void CarRun(unsigned char dire,unsigned char mode)
-  97          {
-  98   1          switch (dire)
-  99   1          {
- 100   2              case 'S':             //停止
- 101   2                  FlashLED();
- 102   2                  moto_RF=0;
- 103   2                  moto_RB=0;
- 104   2                  moto_LF=0;
- 105   2                  moto_LB=0;
- 106   2                  led_S=0;
- 107   2                  break;
- 108   2              case 'F':            //前进
- 109   2                  FlashLED();
- 110   2                  moto_RF=1;
- 111   2                  moto_RB=0;
- 112   2                  moto_LF=1;
- 113   2                  moto_LB=0;
- 114   2                  led_F=0;
- 115   2                  break;
- 116   2              case 'B':            //后退 
- 117   2                  FlashLED();       
- 118   2                  moto_RF=0;
- 119   2                  moto_RB=1;
- 120   2                  moto_LF=0;
- 121   2                  moto_LB=1;
- 122   2                  led_B=0;
- 123   2            break;
- 124   2              case 'L':            //左转        
- 125   2                  FlashLED();
- 126   2                  if(mode=='B')
- 127   2                    moto_RF=0;
- 128   2                  else
- 129   2                  {
- 130   3                    moto_RF=1;
- 131   3                    led_LF=0;
- 132   3                  }
- 133   2                  moto_RB=0;
- 134   2                  moto_LF=0;
- 135   2                  if(mode=='F')
- 136   2                    moto_LB=0;
- 137   2                  else
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:41:07 PAGE 5   
+  87          /***********************************
+  88          *函数名称：void CarRun(unsigned char dire)
+  89          *函数功能：行进方向控制
+  90          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
+  91                     mode 转向方式 'F'：一前一停   'B'：一后一停   'T'：坦克式，一前一后
+  92          
+  93          ***********************************/
+  94          void CarRun(unsigned char dire,unsigned char mode)
+  95          {
+  96   1          switch (dire)
+  97   1          {
+  98   2              case 'S':             //停止
+  99   2                  FlashLED();
+ 100   2                  moto_RF=0;
+ 101   2                  moto_RB=0;
+ 102   2                  moto_LF=0;
+ 103   2                  moto_LB=0;
+ 104   2                  led_S=0;
+ 105   2                  break;
+ 106   2              case 'F':            //前进
+ 107   2                  FlashLED();
+ 108   2                  moto_RF=1;
+ 109   2                  moto_RB=0;
+ 110   2                  moto_LF=1;
+ 111   2                  moto_LB=0;
+ 112   2                  led_F=0;
+ 113   2                  break;
+ 114   2              case 'B':            //后退 
+ 115   2                  FlashLED();       
+ 116   2                  moto_RF=0;
+ 117   2                  moto_RB=1;
+ 118   2                  moto_LF=0;
+ 119   2                  moto_LB=1;
+ 120   2                  led_B=0;
+ 121   2            break;
+ 122   2              case 'L':            //左转        
+ 123   2                  FlashLED();
+ 124   2                  if(mode=='B')
+ 125   2                    moto_RF=0;
+ 126   2                  else
+ 127   2                  {
+ 128   3                    moto_RF=1;
+ 129   3                    led_LF=0;
+ 130   3                  }
+ 131   2                  moto_RB=0;
+ 132   2                  moto_LF=0;
+ 133   2                  if(mode=='F')
+ 134   2                    moto_LB=0;
+ 135   2                  else
+ 136   2                  {
+ 137   3                    moto_LB=1;
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:58:36 PAGE 5   
 
- 138   2                  {
- 139   3                    moto_LB=1;
- 140   3                    led_LB=0;
- 141   3                  }
- 142   2            break;
- 143   2              case 'R':            //右转
- 144   2                  FlashLED();
- 145   2                  moto_RF=0;
- 146   2                  if(mode=='F')
- 147   2                    moto_RB=0;
- 148   2                  else
- 149   2                  {
- 150   3                    moto_RB=1;
- 151   3                    led_RB=0;
- 152   3                  }
- 153   2                  if(mode=='B')
- 154   2                    moto_LF=0;
- 155   2                  else
- 156   2                  {
- 157   3                    moto_LF=1;
- 158   3                    led_RF=0;
- 159   3                  }
- 160   2                  moto_LB=0;
- 161   2            break;
- 162   2          }
- 163   1      }
- 164          
- 165          /***********************************
- 166          *函数名称：void Led(unsigned char dire)
- 167          *函数功能：行进方向控制
- 168          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
- 169          
- 170          ***********************************/
- 171          void FlashLED()
- 172          {
- 173   1                  led_S=1;//中间杠
- 174   1                  led_LF=1;//左前杠
- 175   1                  led_LB=1;//左后杠
- 176   1                  led_B=1;//后杠
- 177   1                  led_RB=1;//右后杠
- 178   1                  led_RF=1;//右前杠
- 179   1                  led_F=1;//前杠
- 180   1      }
- 181          /**********************************
- 182          ***********************************/
+ 138   3                    led_LB=0;
+ 139   3                  }
+ 140   2            break;
+ 141   2              case 'R':            //右转
+ 142   2                  FlashLED();
+ 143   2                  moto_RF=0;
+ 144   2                  if(mode=='F')
+ 145   2                    moto_RB=0;
+ 146   2                  else
+ 147   2                  {
+ 148   3                    moto_RB=1;
+ 149   3                    led_RB=0;
+ 150   3                  }
+ 151   2                  if(mode=='B')
+ 152   2                    moto_LF=0;
+ 153   2                  else
+ 154   2                  {
+ 155   3                    moto_LF=1;
+ 156   3                    led_RF=0;
+ 157   3                  }
+ 158   2                  moto_LB=0;
+ 159   2            break;
+ 160   2          }
+ 161   1      }
+ 162          
+ 163          /***********************************
+ 164          *函数名称：void Led(unsigned char dire)
+ 165          *函数功能：行进方向控制
+ 166          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
+ 167          
+ 168          ***********************************/
+ 169          void FlashLED()
+ 170          {
+ 171   1        led_S=1;//中间杠
+ 172   1        led_LF=1;//左前杠
+ 173   1        led_LB=1;//左后杠
+ 174   1        led_B=1;//后杠
+ 175   1        led_RB=1;//右后杠
+ 176   1        led_RF=1;//右前杠
+ 177   1        led_F=1;//前杠
+ 178   1      }
+ 179          /**********************************
+ 180          ***********************************/
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE

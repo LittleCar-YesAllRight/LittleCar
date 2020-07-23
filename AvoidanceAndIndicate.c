@@ -1,5 +1,5 @@
 #include "reg52.h"
-#define turn_time 5
+#define turn_time 1
 // 数字灯
 sbit led_S=P0^1;  // 中间杠
 sbit led_LF=P0^2;  // 左前杠
@@ -83,8 +83,6 @@ void Delay(unsigned short num)
         while(temp--);
     }
 }
-
-
 
 /***********************************
 *函数名称：void CarRun(unsigned char dire)
@@ -170,13 +168,13 @@ void CarRun(unsigned char dire,unsigned char mode)
 ***********************************/
 void FlashLED()
 {
-						led_S=1;//中间杠
-						led_LF=1;//左前杠
-						led_LB=1;//左后杠
-						led_B=1;//后杠
-						led_RB=1;//右后杠
-						led_RF=1;//右前杠
-						led_F=1;//前杠
+	led_S=1;//中间杠
+	led_LF=1;//左前杠
+	led_LB=1;//左后杠
+	led_B=1;//后杠
+	led_RB=1;//右后杠
+	led_RF=1;//右前杠
+	led_F=1;//前杠
 }
 /**********************************
 ***********************************/
