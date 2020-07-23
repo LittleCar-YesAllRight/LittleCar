@@ -1,0 +1,280 @@
+C51 COMPILER V9.54   HELLOWORLD                                                            07/23/2020 15:25:13 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE HELLOWORLD
+OBJECT MODULE PLACED IN .\Objects\HelloWorld.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE HelloWorld.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\HelloWorld.lst) TABS(2) OBJECT(.\Objects\HelloWorld.obj)
+
+line level    source
+
+   1          #include "reg52.h"
+   2          #define turn_time 1
+   3          sbit led_S=P0^1;  // 中间杠
+   4          sbit led_LF=P0^2;  // 左前杠
+   5          sbit led_LB=P0^3;  // 左后杠
+   6          sbit led_B=P0^4;  // 后杠
+   7          sbit led_RB=P0^5;  // 右后杠
+   8          sbit led_RF=P0^6;  // 右前杠
+   9          sbit led_F=P0^7;  // 前杠
+  10          sbit moto_RF=P1^6;
+  11          sbit moto_RB=P1^5;
+  12          sbit moto_LF=P1^4;
+  13          sbit moto_LB=P1^3;
+  14          // 红外避障串口,有障碍为0
+  15          sbit lavoidance=P3^4;  // 左红外
+  16          sbit ravoidance=P3^5;  // 右红外
+  17          // 巡线串口, 压线为0
+  18          sbit linspection=P3^7;  // 左巡线
+  19          sbit rinspection=P3^6;  // 右巡线
+  20          void Delay(unsigned char num);
+  21          void CarRun(unsigned char dire);
+  22          void FlashLED();
+  23          
+  24          int main(void)                                                                                            
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+C51 COMPILER V9.54   HELLOWORLD                                                            07/23/2020 15:25:13 PAGE 2   
+
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+C51 COMPILER V9.54   HELLOWORLD                                                            07/23/2020 15:25:13 PAGE 3   
+
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                                                                                                                        
+             -                         
+  25          {
+  26   1        while(1)
+  27   1        {
+  28   2          // 避障
+  29   2          if(lavoidance==1 && ravoidance==1 && linspection==0 && rinspection==0)  // 没有障碍,并且不压线
+  30   2            CarRun('F');
+  31   2          else if(lavoidance==0 && ravoidance==1)  // 左边有障碍
+  32   2          {
+  33   3            CarRun('R');
+  34   3            Delay(1);
+  35   3          }
+  36   2          else if(lavoidance==1 && ravoidance==0)  // 右边有障碍
+  37   2          {
+  38   3            CarRun('L');
+  39   3            Delay(1);
+  40   3          }
+  41   2          else if(lavoidance==0 && ravoidance==0)  // 前面有障碍
+  42   2          {
+  43   3            CarRun('B');
+  44   3            CarRun('L');
+  45   3          }
+  46   2          //巡线
+  47   2          if(linspection==0 && rinspection==1)
+  48   2            CarRun('R');
+  49   2          else if(linspection==1 && rinspection==0)
+  50   2            CarRun('L');
+  51   2          else if(linspection==1 && rinspection==1)
+  52   2            CarRun('S');
+  53   2        }
+  54   1      }
+  55          
+  56          /***********************************
+  57          *函数名称:void Delay(unsigned char num)
+  58          *函数功能:延时
+  59          *参数说明:num 延时时间 值最大255
+  60          
+  61          ***********************************/
+  62          void Delay(unsigned char num)
+  63          {
+  64   1          unsigned int temp=0;
+  65   1          while(num--)
+  66   1          {
+  67   2              temp=2000;
+  68   2              while(temp--);
+  69   2          }
+  70   1      }
+  71          /***********************************
+  72          
+  73          /***********************************
+  74          *函数名称：void CarRun(unsigned char dire)
+  75          *函数功能：行进方向控制
+C51 COMPILER V9.54   HELLOWORLD                                                            07/23/2020 15:25:13 PAGE 4   
+
+  76          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
+  77          
+  78          ***********************************/
+  79          void CarRun(unsigned char dire)
+  80          {
+  81   1          switch (dire)
+  82   1          {
+  83   2              case 'S':             //停止
+  84   2                  moto_RF=0;
+  85   2                  moto_RB=0;
+  86   2                  moto_LF=0;
+  87   2                  moto_LB=0;
+  88   2                  FlashLED();
+  89   2                  led_S=0;
+  90   2                  break;
+  91   2              case 'F':            //前进
+  92   2                  moto_RF=1;
+  93   2                  moto_RB=0;
+  94   2                  moto_LF=1;
+  95   2                  moto_LB=0;
+  96   2                  FlashLED();
+  97   2                  led_F=0;
+  98   2                  break;
+  99   2              case 'B':            //后退        
+ 100   2                  moto_RF=0;
+ 101   2                  moto_RB=1;
+ 102   2                  moto_LF=0;
+ 103   2                  moto_LB=1;
+ 104   2                  FlashLED();
+ 105   2                  led_B=0;
+ 106   2            break;
+ 107   2              case 'L':            //左转        
+ 108   2                  moto_RF=1;
+ 109   2                  moto_RB=0;
+ 110   2                  moto_LF=0;
+ 111   2                  moto_LB=1;
+ 112   2                  FlashLED();
+ 113   2                  led_LF=0;
+ 114   2                  led_RB=0;
+ 115   2            break;
+ 116   2              case 'R':            //右转
+ 117   2                  moto_RF=0;
+ 118   2                  moto_RB=1;
+ 119   2                  moto_LF=1;
+ 120   2                  moto_LB=0;
+ 121   2                  FlashLED();
+ 122   2                  led_RF=0;
+ 123   2                  led_LB=0;
+ 124   2            break;
+ 125   2          }
+ 126   1      }
+ 127          
+ 128          /***********************************
+ 129          *函数名称：void Led(unsigned char dire)
+ 130          *函数功能：行进方向控制
+ 131          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
+ 132          
+ 133          ***********************************/
+ 134          void FlashLED()
+ 135          {
+ 136   1                  led_S=1;//中间杠
+ 137   1                  led_LF=1;//左前杠
+C51 COMPILER V9.54   HELLOWORLD                                                            07/23/2020 15:25:13 PAGE 5   
+
+ 138   1                  led_LB=1;//左后杠
+ 139   1                  led_B=1;//后杠
+ 140   1                  led_RB=1;//右后杠
+ 141   1                  led_RF=1;//右前杠
+ 142   1                  led_F=1;//前杠
+ 143   1      }
+ 144          /**********************************
+ 145          ***********************************/
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    228    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
