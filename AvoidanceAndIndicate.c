@@ -7,7 +7,7 @@ sbit led_B=P0^4;  // 后杠
 sbit led_RB=P0^5;  // 右后杠
 sbit led_RF=P0^6;  // 右前杠
 sbit led_F=P0^7;  // 前杠
-sbit moto_RF=P1^6;
+sbit moto_RF=P1^6;	//这个怎么没备注叫啥名字？？？
 sbit moto_RB=P1^5;
 sbit moto_LF=P1^4;
 sbit moto_LB=P1^3;
@@ -67,7 +67,6 @@ void Delay(unsigned char num)
         while(temp--);
     }
 }
-/***********************************
 
 
 
