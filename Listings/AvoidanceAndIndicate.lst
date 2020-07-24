@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 12:11:13 PAGE 1   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 14:38:48 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE AVOIDANCEANDINDICATE
@@ -62,7 +62,7 @@ line level    source
              -                                                                                                                        
              -                                                                                                                        
              -                                                                                                                        
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 12:11:13 PAGE 2   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 14:38:48 PAGE 2   
 
              -                                                                                                                        
              -                                                                                                                        
@@ -126,7 +126,7 @@ line level    source
              -                                                                                                                        
              -                                                                                                                        
              -                                                                                                                        
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 12:11:13 PAGE 3   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 14:38:48 PAGE 3   
 
              -                                                                                                                        
              -                                                                                                                        
@@ -180,9 +180,9 @@ line level    source
   63   3          }
   64   2          //巡线
   65   2          if(0==linspection && 1==rinspection)
-  66   2            CarRunPro(127,-127);
+  66   2            CarRunPro(126,-126);
   67   2          else if(1==linspection && 0==rinspection)
-  68   2            CarRunPro(-127,127);
+  68   2            CarRunPro(-126,126);
   69   2        }
   70   1        
   71   1      }
@@ -190,7 +190,7 @@ line level    source
   73          
   74          /***********************************
   75          *函数名称:void Delay(unsigned short num)
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 12:11:13 PAGE 4   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 14:38:48 PAGE 4   
 
   76          *函数功能:延时
   77          *参数说明:num 延时时间 值最大255
@@ -254,7 +254,7 @@ line level    source
  135          /***********************************
  136          *函数名称：void CarRunPro(signed char left_rate,signed char right_rate)
  137          *函数功能：行进方向的高级控制
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 12:11:13 PAGE 5   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 14:38:48 PAGE 5   
 
  138          *参数说明：left_rate/right_rate(-128~127)表示左/右轮跑的速度,0/-1表示完全不运动,实�
              -�上,只有接近127能驱动
@@ -272,7 +272,7 @@ line level    source
  150   1        led_LB=!(-1>left_rate&&!(-1>right_rate));// 左退左转
  151   1        led_B=!(-1>left_rate&&-1>right_rate);// 后退
  152   1        led_RB=!(!(-1>left_rate)&&-1>right_rate);// 右退右转
- 153   1        led_RF=!(0<left_rate&&!(0<left_rate));// 左进右转
+ 153   1        led_RF=!(0<left_rate&&!(0<right_rate));// 左进右转
  154   1        led_F=!(0<left_rate&&0<right_rate);// 前进
  155   1        l++;
  156   1        r++;

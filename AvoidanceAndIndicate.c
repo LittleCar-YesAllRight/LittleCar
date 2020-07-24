@@ -63,9 +63,9 @@ void AvoidanceAndIndicate()
 		}
 		//巡线
 		if(0==linspection && 1==rinspection)
-			CarRunPro(127,-127);
+			CarRunPro(126,-126);
 		else if(1==linspection && 0==rinspection)
-			CarRunPro(-127,127);
+			CarRunPro(-126,126);
 	}
 	
 }
@@ -150,7 +150,7 @@ void CarRunPro(signed char left_rate,signed char right_rate)
 	led_LB=!(-1>left_rate&&!(-1>right_rate));// 左退左转
 	led_B=!(-1>left_rate&&-1>right_rate);// 后退
 	led_RB=!(!(-1>left_rate)&&-1>right_rate);// 右退右转
-	led_RF=!(0<left_rate&&!(0<left_rate));// 左进右转
+	led_RF=!(0<left_rate&&!(0<right_rate));// 左进右转
 	led_F=!(0<left_rate&&0<right_rate);// 前进
 	l++;
 	r++;

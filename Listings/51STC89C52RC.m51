@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        07/24/2020  12:11:15  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22                                                        07/24/2020  14:38:49  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
@@ -59,7 +59,7 @@ SEGMENT                                            DATA_GROUP
   +--> ?PR?_DELAY?AVOIDANCEANDINDICATE
   +--> ?PR?_CARRUNPRO?AVOIDANCEANDINDICATE
 
-BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  12:11:15  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  14:38:49  PAGE 2
 
 
 ?PR?_CARRUN?AVOIDANCEANDINDICATE                 000AH    0001H
@@ -119,7 +119,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51STC89C52RC (?C_STARTUP)
   B:0080H.3       PUBLIC        led_LB
   C:0349H         PUBLIC        main
   B:0080H.2       PUBLIC        led_LF
-BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  12:11:15  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  14:38:49  PAGE 3
 
 
   B:0080H.5       PUBLIC        led_RB
@@ -179,7 +179,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51STC89C52RC (?C_STARTUP)
   C:02A9H         LINE#         69
   -------         ENDPROC       AVOIDANCEANDINDICATE
   -------         PROC          _DELAY
-BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  12:11:15  PAGE 4
+BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  14:38:49  PAGE 4
 
 
   D:0006H         SYMBOL        num
@@ -239,7 +239,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51STC89C52RC (?C_STARTUP)
   C:0003H         LINE#         142
   C:0003H         LINE#         144
   C:0016H         LINE#         145
-BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  12:11:15  PAGE 5
+BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  14:38:49  PAGE 5
 
 
   C:002CH         LINE#         146
