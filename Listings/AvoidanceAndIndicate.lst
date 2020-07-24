@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:58:36 PAGE 1   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 12:11:13 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE AVOIDANCEANDINDICATE
@@ -10,31 +10,33 @@ line level    source
 
    1          #include "reg52.h"
    2          #define turn_time 1
-   3          // 数字灯
-   4          sbit led_S=P0^1;  // 中间杠
-   5          sbit led_LF=P0^2;  // 左前杠
-   6          sbit led_LB=P0^3;  // 左后杠
-   7          sbit led_B=P0^4;  // 后杠
-   8          sbit led_RB=P0^5;  // 右后杠
-   9          sbit led_RF=P0^6;  // 右前杠
-  10          sbit led_F=P0^7;  // 前杠
-  11          // 马达
-  12          sbit moto_RF=P1^6;  // 右轮向前 
-  13          sbit moto_RB=P1^5;  // 右轮向后
-  14          sbit moto_LF=P1^4;  // 左轮向前
-  15          sbit moto_LB=P1^3;  // 左轮向后
-  16          // 红外避障串口,有障碍为0
-  17          sbit lavoidance=P3^4;  // 左红外
-  18          sbit ravoidance=P3^5;  // 右红外
-  19          // 巡线串口, 压线为0
-  20          sbit linspection=P3^7;  // 左巡线
-  21          sbit rinspection=P3^6;  // 右巡线
-  22          void Delay(unsigned short num);
-  23          void CarRun(unsigned char dire,unsigned char mode);
-  24          void FlashLED();
-  25          int AvoidanceAndIndicate();
-  26          
-  27          int main(void)                                                                                            
+   3          #define ABS_NOT(x) (x<0?~x:x)
+   4          // 数字灯
+   5          sbit led_S=P0^1;  // 中间杠
+   6          sbit led_LF=P0^2;  // 左前杠
+   7          sbit led_LB=P0^3;  // 左后杠
+   8          sbit led_B=P0^4;  // 后杠
+   9          sbit led_RB=P0^5;  // 右后杠
+  10          sbit led_RF=P0^6;  // 右前杠
+  11          sbit led_F=P0^7;  // 前杠
+  12          // 马达
+  13          sbit moto_RF=P1^6;  // 右轮向前 
+  14          sbit moto_RB=P1^5;  // 右轮向后
+  15          sbit moto_LF=P1^4;  // 左轮向前
+  16          sbit moto_LB=P1^3;  // 左轮向后
+  17          // 红外避障串口,有障碍为0
+  18          sbit lavoidance=P3^4;  // 左红外
+  19          sbit ravoidance=P3^5;  // 右红外
+  20          // 巡线串口, 压线为0
+  21          sbit linspection=P3^7;  // 左巡线
+  22          sbit rinspection=P3^6;  // 右巡线
+  23          void Delay(unsigned short num);
+  24          void CarRun(unsigned char dire,unsigned char mode);
+  25          void FlashLED();
+  26          void AvoidanceAndIndicate();
+  27          void CarRunPro(signed char left_rate,signed char right_rate);
+  28          
+  29          int main(void)                                                                                            
              -                                                                                                                        
              -                                                                                                                        
              -                                                                                                                        
@@ -60,9 +62,7 @@ line level    source
              -                                                                                                                        
              -                                                                                                                        
              -                                                                                                                        
-             -                                                                                                                        
-             -                                                                                                                        
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:58:36 PAGE 2   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 12:11:13 PAGE 2   
 
              -                                                                                                                        
              -                                                                                                                        
@@ -126,8 +126,10 @@ line level    source
              -                                                                                                                        
              -                                                                                                                        
              -                                                                                                                        
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:58:36 PAGE 3   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 12:11:13 PAGE 3   
 
+             -                                                                                                                        
+             -                                                                                                                        
              -                                                                                                                        
              -                                                                                                                        
              -                                                                                                                        
@@ -142,171 +144,151 @@ line level    source
              -                                                                                                                        
              -                                                                                                                        
              -                         
-  28          {
-  29   1        AvoidanceAndIndicate();
-  30   1        while(1);
-  31   1      }
-  32          
-  33          // 巡线和避障
-  34          int AvoidanceAndIndicate()
-  35          {
-  36   1        while(1)
-  37   1        {
-  38   2          // 拿在空中 或者 碰到黑线 就停
-  39   2          if(linspection==1 && rinspection==1)
-  40   2          {
-  41   3            CarRun('S','T');
-  42   3            continue;
-  43   3          }
-  44   2          // 避障
-  45   2          if(lavoidance==1 && ravoidance==1 && linspection==0 && rinspection==0)  // 没有障碍,并且不压线
-  46   2            CarRun('F','T');
-  47   2          else if(lavoidance==0 && ravoidance==1)  // 左边有障碍
-  48   2          {
-  49   3            CarRun('R','T');
-  50   3            Delay(turn_time);
-  51   3          }
-  52   2          else if(lavoidance==1 && ravoidance==0)  // 右边有障碍
-  53   2          {
-  54   3            CarRun('L','T');
-  55   3            Delay(turn_time);
-  56   3          }
-  57   2          else if(lavoidance==0 && ravoidance==0)  // 前面有障碍
-  58   2          {
-  59   3            CarRun('L','B');
-  60   3          }
-  61   2          //巡线
-  62   2          if(linspection==0 && rinspection==1)
-  63   2            CarRun('R','F');
-  64   2          else if(linspection==1 && rinspection==0)
-  65   2            CarRun('L','F');
-  66   2        }
-  67   1        
-  68   1      }
-  69          
-  70          
-  71          /***********************************
-  72          *函数名称:void Delay(unsigned short num)
-  73          *函数功能:延时
-  74          *参数说明:num 延时时间 值最大255
-  75          
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:58:36 PAGE 4   
+  30          {
+  31   1              
+  32   1        AvoidanceAndIndicate();
+  33   1        while(1);
+  34   1      }
+  35          
+  36          // 巡线和避障
+  37          void AvoidanceAndIndicate()
+  38          {
+  39   1        while(1)
+  40   1        {
+  41   2          // 拿在空中 或者 碰到黑线 就停
+  42   2          if(1==linspection && 1==rinspection)
+  43   2          {
+  44   3            CarRun('S','T');
+  45   3            continue;
+  46   3          }
+  47   2          // 避障
+  48   2          if(1==lavoidance && 1==ravoidance && 0==linspection && 0==rinspection)  // 没有障碍,并且不压线
+  49   2            CarRun('F','T');
+  50   2          else if(0==lavoidance && 1==ravoidance)  // 左边有障碍
+  51   2          {
+  52   3            CarRun('R','T');
+  53   3            Delay(turn_time);
+  54   3          }
+  55   2          else if(1==lavoidance && 0==ravoidance)  // 右边有障碍
+  56   2          {
+  57   3            CarRun('L','T');
+  58   3            Delay(turn_time);
+  59   3          }
+  60   2          else if(0==lavoidance && 0==ravoidance)  // 前面有障碍
+  61   2          {
+  62   3            CarRun('L','B');
+  63   3          }
+  64   2          //巡线
+  65   2          if(0==linspection && 1==rinspection)
+  66   2            CarRunPro(127,-127);
+  67   2          else if(1==linspection && 0==rinspection)
+  68   2            CarRunPro(-127,127);
+  69   2        }
+  70   1        
+  71   1      }
+  72          
+  73          
+  74          /***********************************
+  75          *函数名称:void Delay(unsigned short num)
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 12:11:13 PAGE 4   
 
-  76          ***********************************/
-  77          void Delay(unsigned short num)
-  78          {
-  79   1          unsigned int temp=0;
-  80   1          while(num--)
-  81   1          {
-  82   2              temp=200;
-  83   2              while(temp--);
-  84   2          }
-  85   1      }
-  86          
-  87          /***********************************
-  88          *函数名称：void CarRun(unsigned char dire)
-  89          *函数功能：行进方向控制
-  90          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
-  91                     mode 转向方式 'F'：一前一停   'B'：一后一停   'T'：坦克式，一前一后
+  76          *函数功能:延时
+  77          *参数说明:num 延时时间 值最大255
+  78          
+  79          ***********************************/
+  80          void Delay(unsigned short num)
+  81          {
+  82   1          unsigned int temp=0;
+  83   1          while(num--)
+  84   1          {
+  85   2              temp=200;
+  86   2              while(temp--);
+  87   2          }
+  88   1      }
+  89          /**********************************
+  90          ***********************************/
+  91          
   92          
-  93          ***********************************/
-  94          void CarRun(unsigned char dire,unsigned char mode)
-  95          {
-  96   1          switch (dire)
-  97   1          {
-  98   2              case 'S':             //停止
-  99   2                  FlashLED();
- 100   2                  moto_RF=0;
- 101   2                  moto_RB=0;
- 102   2                  moto_LF=0;
- 103   2                  moto_LB=0;
- 104   2                  led_S=0;
- 105   2                  break;
- 106   2              case 'F':            //前进
- 107   2                  FlashLED();
- 108   2                  moto_RF=1;
- 109   2                  moto_RB=0;
- 110   2                  moto_LF=1;
- 111   2                  moto_LB=0;
- 112   2                  led_F=0;
- 113   2                  break;
- 114   2              case 'B':            //后退 
- 115   2                  FlashLED();       
- 116   2                  moto_RF=0;
- 117   2                  moto_RB=1;
- 118   2                  moto_LF=0;
- 119   2                  moto_LB=1;
- 120   2                  led_B=0;
- 121   2            break;
- 122   2              case 'L':            //左转        
- 123   2                  FlashLED();
- 124   2                  if(mode=='B')
- 125   2                    moto_RF=0;
+  93          /***********************************
+  94          *函数名称：void CarRun(unsigned char dire)
+  95          *函数功能：行进方向控制
+  96          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
+  97                     mode 转向方式 'F'：一前一停   'B'：一后一停   'T'：坦克式，一前一后
+  98          
+  99          ***********************************/
+ 100          void CarRun(unsigned char dire,unsigned char mode)
+ 101          {
+ 102   1          switch (dire)
+ 103   1          {
+ 104   2              case 'S':             //停止
+ 105   2                  CarRunPro(0,0);
+ 106   2                  break;
+ 107   2              case 'F':            //前进
+ 108   2                  CarRunPro(127,127);
+ 109   2                  break;
+ 110   2              case 'B':            //后退 
+ 111   2                  CarRunPro(-128,-128);
+ 112   2            break;
+ 113   2              case 'L':            //左转        
+ 114   2                  if('B'==mode)
+ 115   2                    CarRunPro(-128,0);
+ 116   2                  if('F'==mode)
+ 117   2                    CarRunPro(0,127);
+ 118   2                  else
+ 119   2                    CarRunPro(-128,127);
+ 120   2            break;
+ 121   2              case 'R':            //右转
+ 122   2                  if('B'==mode)
+ 123   2                    CarRunPro(0,-128);
+ 124   2                  if('F'==mode)
+ 125   2                    CarRunPro(127,0);
  126   2                  else
- 127   2                  {
- 128   3                    moto_RF=1;
- 129   3                    led_LF=0;
- 130   3                  }
- 131   2                  moto_RB=0;
- 132   2                  moto_LF=0;
- 133   2                  if(mode=='F')
- 134   2                    moto_LB=0;
- 135   2                  else
- 136   2                  {
- 137   3                    moto_LB=1;
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/23/2020 18:58:36 PAGE 5   
+ 127   2                    CarRunPro(127,-128);
+ 128   2                  break;
+ 129   2          }
+ 130   1      }
+ 131          
+ 132          /**********************************
+ 133          ***********************************/
+ 134          
+ 135          /***********************************
+ 136          *函数名称：void CarRunPro(signed char left_rate,signed char right_rate)
+ 137          *函数功能：行进方向的高级控制
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/24/2020 12:11:13 PAGE 5   
 
- 138   3                    led_LB=0;
- 139   3                  }
- 140   2            break;
- 141   2              case 'R':            //右转
- 142   2                  FlashLED();
- 143   2                  moto_RF=0;
- 144   2                  if(mode=='F')
- 145   2                    moto_RB=0;
- 146   2                  else
- 147   2                  {
- 148   3                    moto_RB=1;
- 149   3                    led_RB=0;
- 150   3                  }
- 151   2                  if(mode=='B')
- 152   2                    moto_LF=0;
- 153   2                  else
- 154   2                  {
- 155   3                    moto_LF=1;
- 156   3                    led_RF=0;
- 157   3                  }
- 158   2                  moto_LB=0;
- 159   2            break;
- 160   2          }
- 161   1      }
- 162          
- 163          /***********************************
- 164          *函数名称：void Led(unsigned char dire)
- 165          *函数功能：行进方向控制
- 166          *参数说明：dire 方向 'S'：停止   'F'：前   'B'：后   'L'：左   'R'：右
- 167          
- 168          ***********************************/
- 169          void FlashLED()
- 170          {
- 171   1        led_S=1;//中间杠
- 172   1        led_LF=1;//左前杠
- 173   1        led_LB=1;//左后杠
- 174   1        led_B=1;//后杠
- 175   1        led_RB=1;//右后杠
- 176   1        led_RF=1;//右前杠
- 177   1        led_F=1;//前杠
- 178   1      }
- 179          /**********************************
- 180          ***********************************/
+ 138          *参数说明：left_rate/right_rate(-128~127)表示左/右轮跑的速度,0/-1表示完全不运动,实�
+             -�上,只有接近127能驱动
+ 139          
+ 140          ***********************************/
+ 141          void CarRunPro(signed char left_rate,signed char right_rate)
+ 142          {
+ 143   1        static signed char l=0,r=0;
+ 144   1        moto_RF=0<right_rate && 0==r;
+ 145   1        moto_RB=-1>right_rate && 0==r;
+ 146   1        moto_LF=0<left_rate && 0==l;
+ 147   1        moto_LB=-1>left_rate && 0==l;
+ 148   1        led_S=!((0==left_rate||-1==left_rate)&&(0==right_rate||-1==right_rate));// 左右皆止
+ 149   1        led_LF=!(0<right_rate&&!(0<left_rate));// 右进左转
+ 150   1        led_LB=!(-1>left_rate&&!(-1>right_rate));// 左退左转
+ 151   1        led_B=!(-1>left_rate&&-1>right_rate);// 后退
+ 152   1        led_RB=!(!(-1>left_rate)&&-1>right_rate);// 右退右转
+ 153   1        led_RF=!(0<left_rate&&!(0<left_rate));// 左进右转
+ 154   1        led_F=!(0<left_rate&&0<right_rate);// 前进
+ 155   1        l++;
+ 156   1        r++;
+ 157   1        l%=128-ABS_NOT(left_rate);
+ 158   1        r%=128-ABS_NOT(right_rate);
+ 159   1      }
+ 160          /**********************************
+ 161          ***********************************/
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    285    ----
+   CODE SIZE        =    662    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----       1
+   DATA SIZE        =      2       1
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
