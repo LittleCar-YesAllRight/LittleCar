@@ -28,8 +28,12 @@ void Patrol();
 
 int main(void)
 {
-    digit=0x00;
-    while(1);
+    
+    while(1)
+		{
+			Patrol();
+			FlashLightStatus();
+		}
 }
 
 // 避障
@@ -70,12 +74,12 @@ void Patrol()
         CarRunPro(0,0);  // 停止运行
         return;
     }
-    switch(rlp){
+    switch(1==rlp){
         case 0:  // 右光感是白色
-            CarRunPro(-127,127);  // 往右转圈
+            CarRunPro(127,-127);  // 往右转圈
             break;
         case 1:  // 右光感是黑色
-            CarRunPro(127,-127);  // 往左转圈
+            CarRunPro(-127,127);  // 往左转圈
             break;
     }
 }
@@ -155,10 +159,24 @@ void CarRunPro(char left_rate,char right_rate)
 void FlashLightStatus()
 {
     int status;
-    status=moto_RF+moto_RB+moto_LF+moto_LB;
+    status=1*(1==moto_RF)+2*(1==moto_RB)+3*(1==moto_LF)+6*(1==moto_LB);
     switch(status){
         case 0:
-            digit=0xFD;   // 亮中线
+            digit=0xFD;  // 中
+        case 1:
+            digit=0xBF;  // 右前
+        case 2:
+            digit=0xDF;  // 右后
+        case 3:
+            digit=0xFB;  // 左前
+        case 4:
+            digit=0x7F;  // 前
+				case 6:
+            digit=0xF7;  // 左后
+        case 7:
+            digit=0xB7;  // 右前左后
+        case 8:
+            digit=0xD7;  // 后
     }
 }
 /**********************************
