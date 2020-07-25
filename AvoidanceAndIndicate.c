@@ -76,10 +76,10 @@ void Patrol()
     }
     switch(1==rlp){
         case 0:  // 右光感是白色
-            CarRunPro(127,-127);  // 往右转圈
+            CarRunPro(127,0);  // 往右转圈
             break;
         case 1:  // 右光感是黑色
-            CarRunPro(-127,127);  // 往左转圈
+            CarRunPro(0,127);  // 往左转圈
             break;
     }
 }
@@ -163,20 +163,28 @@ void FlashLightStatus()
     switch(status){
         case 0:
             digit=0xFD;  // 中
+            break;
         case 1:
             digit=0xBF;  // 右前
+            break;
         case 2:
             digit=0xDF;  // 右后
+            break;
         case 3:
             digit=0xFB;  // 左前
+            break;
         case 4:
             digit=0x7F;  // 前
-				case 6:
+            break;
+        case 6:
             digit=0xF7;  // 左后
+            break;
         case 7:
             digit=0xB7;  // 右前左后
+            break;
         case 8:
             digit=0xD7;  // 后
+            break;
     }
 }
 /**********************************
