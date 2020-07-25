@@ -24,14 +24,14 @@ void Delay(unsigned short);
 void Avoidance();
 void CarRunPro(char left_rate,char right_rate);
 void FlashLightStatus();
-void Patrol();
+void LPatrol();
 
 int main(void)
 {
     
     while(1)
 		{
-			Patrol();
+			LPatrol();
 			FlashLightStatus();
 		}
 }
@@ -67,19 +67,24 @@ void Avoidance()
 }
 
 //右光感巡线
-void Patrol()
+void LPatrol()
 {
-    if(1==llp)  // 如果左光感遇到黑线
+	if(1==llp && 1==rlp)  // 如果左光感遇到黑线就停，以防万一，也检测一下右光感是否压在黑线上
     {
         CarRunPro(0,0);  // 停止运行
         return;
     }
     switch(1==rlp){
         case 0:  // 右光感是白色
-            CarRunPro(127,0);  // 往右转圈
+            CarRunPro(100,20);  // 往右转圈
             break;
         case 1:  // 右光感是黑色
-            CarRunPro(0,127);  // 往左转圈
+            CarRunPro(20,100);  // 往左转圈
+            break;
+    }
+    switch(1==llp){
+        case 1:  // 万一到这里左光感还能是1, 就说明脱轨了, 这时候给他个微调
+            CarRunPro(20,100);  // 往左转圈
             break;
     }
 }
@@ -127,7 +132,7 @@ void CarRunPro(char left_rate,char right_rate)
         moto_LB = 0;
         moto_LF = 0;
     }
-    if(r <= ABS_NOT(left_rate)){
+    if(r <= ABS_NOT(right_rate)){
         if(right_rate>0){
             moto_RF = 1;
             moto_RB = 0;
