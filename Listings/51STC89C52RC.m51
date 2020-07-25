@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        07/24/2020  14:38:49  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22                                                        07/24/2020  22:11:25  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
@@ -25,45 +25,41 @@ LINK MAP OF MODULE:  .\Objects\51STC89C52RC (?C_STARTUP)
             * * * * * * *   D A T A   M E M O R Y   * * * * * * *
             REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
             DATA    0008H     0002H     UNIT         ?DT?AVOIDANCEANDINDICATE
-            DATA    000AH     0001H     UNIT         _DATA_GROUP_
+            DATA    000AH     0001H     UNIT         ?DT?_CARRUN?AVOIDANCEANDINDICATE
             IDATA   000BH     0001H     UNIT         ?STACK
 
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
             CODE    0000H     0003H     ABSOLUTE     
-            CODE    0003H     01AEH     UNIT         ?PR?_CARRUNPRO?AVOIDANCEANDINDICATE
-            CODE    01B1H     008CH     UNIT         ?C_C51STARTUP
-            CODE    023DH     006EH     UNIT         ?PR?AVOIDANCEANDINDICATE?AVOIDANCEANDINDICATE
-            CODE    02ABH     005AH     UNIT         ?PR?_CARRUN?AVOIDANCEANDINDICATE
-            CODE    0305H     0022H     UNIT         ?C?LIB_CODE
-            CODE    0327H     001BH     UNIT         ?PR?_DELAY?AVOIDANCEANDINDICATE
-            CODE    0342H     0007H     UNIT         ?C_INITSEG
-            CODE    0349H     0005H     UNIT         ?PR?MAIN?AVOIDANCEANDINDICATE
+            CODE    0003H     008CH     UNIT         ?C_C51STARTUP
+            CODE    008FH     0085H     UNIT         ?PR?_CARRUNPRO?AVOIDANCEANDINDICATE
+            CODE    0114H     0064H     UNIT         ?PR?AVOIDANCEANDINDICATE?AVOIDANCEANDINDICATE
+            CODE    0178H     0056H     UNIT         ?PR?_CARRUN?AVOIDANCEANDINDICATE
+            CODE    01CEH     0022H     UNIT         ?C?LIB_CODE
+            CODE    01F0H     001BH     UNIT         ?PR?_DELAY?AVOIDANCEANDINDICATE
+            CODE    020BH     0017H     UNIT         ?PR?MAIN?AVOIDANCEANDINDICATE
+            CODE    0222H     0015H     UNIT         ?PR?__ABS?AVOIDANCEANDINDICATE
+            CODE    0237H     0007H     UNIT         ?C_INITSEG
 
 
 
 OVERLAY MAP OF MODULE:   .\Objects\51STC89C52RC (?C_STARTUP)
 
 
-SEGMENT                                            DATA_GROUP 
-  +--> CALLED SEGMENT                            START    LENGTH
-----------------------------------------------------------------
-?C_C51STARTUP                                    -----    -----
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
   +--> ?PR?MAIN?AVOIDANCEANDINDICATE
   +--> ?C_INITSEG
 
-?PR?MAIN?AVOIDANCEANDINDICATE                    -----    -----
-  +--> ?PR?AVOIDANCEANDINDICATE?AVOIDANCEAND...
-
-?PR?AVOIDANCEANDINDICATE?AVOIDANCEAND...         -----    -----
-  +--> ?PR?_CARRUN?AVOIDANCEANDINDICATE
-  +--> ?PR?_DELAY?AVOIDANCEANDINDICATE
+?PR?MAIN?AVOIDANCEANDINDICATE
   +--> ?PR?_CARRUNPRO?AVOIDANCEANDINDICATE
 
-BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  14:38:49  PAGE 2
+?PR?_CARRUNPRO?AVOIDANCEANDINDICATE
+  +--> ?PR?__ABS?AVOIDANCEANDINDICATE
 
 
-?PR?_CARRUN?AVOIDANCEANDINDICATE                 000AH    0001H
-  +--> ?PR?_CARRUNPRO?AVOIDANCEANDINDICATE
+BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  22:11:25  PAGE 2
 
 
 
@@ -73,7 +69,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51STC89C52RC (?C_STARTUP)
   ----------------------------------
 
   -------         MODULE        ?C_STARTUP
-  C:01B1H         SEGMENT       ?C_C51STARTUP
+  C:0003H         SEGMENT       ?C_C51STARTUP
   I:000BH         SEGMENT       ?STACK
   C:0000H         PUBLIC        ?C_STARTUP
   D:00E0H         SYMBOL        ACC
@@ -83,7 +79,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\51STC89C52RC (?C_STARTUP)
   N:0000H         SYMBOL        IBPSTACK
   N:0100H         SYMBOL        IBPSTACKTOP
   N:0080H         SYMBOL        IDATALEN
-  C:01B4H         SYMBOL        IDATALOOP
+  C:0006H         SYMBOL        IDATALOOP
   N:0000H         SYMBOL        PBPSTACK
   N:0100H         SYMBOL        PBPSTACKTOP
   N:0000H         SYMBOL        PDATALEN
@@ -92,142 +88,142 @@ SYMBOL TABLE OF MODULE:  .\Objects\51STC89C52RC (?C_STARTUP)
   N:0000H         SYMBOL        PPAGEENABLE
   D:00A0H         SYMBOL        PPAGE_SFR
   D:0081H         SYMBOL        SP
-  C:01B1H         SYMBOL        STARTUP1
+  C:0003H         SYMBOL        STARTUP1
   N:0000H         SYMBOL        XBPSTACK
   N:0000H         SYMBOL        XBPSTACKTOP
   N:0000H         SYMBOL        XDATALEN
   N:0000H         SYMBOL        XDATASTART
   C:0000H         LINE#         126
-  C:01B1H         LINE#         133
-  C:01B3H         LINE#         134
-  C:01B4H         LINE#         135
-  C:01B5H         LINE#         136
-  C:01B7H         LINE#         185
-  C:01BAH         LINE#         196
+  C:0003H         LINE#         133
+  C:0005H         LINE#         134
+  C:0006H         LINE#         135
+  C:0007H         LINE#         136
+  C:0009H         LINE#         185
+  C:000CH         LINE#         196
   -------         ENDMOD        ?C_STARTUP
 
   -------         MODULE        AVOIDANCEANDINDICATE
   C:0000H         SYMBOL        _ICE_DUMMY_
   D:0080H         PUBLIC        P0
   D:0090H         PUBLIC        P1
-  C:0003H         PUBLIC        _CarRunPro
+  C:008FH         PUBLIC        _CarRunPro
   D:00B0H         PUBLIC        P3
   D:00A8H         PUBLIC        IE
   D:00B8H         PUBLIC        IP
   B:00B0H.4       PUBLIC        lavoidance
   B:00B0H.5       PUBLIC        ravoidance
-  B:0080H.3       PUBLIC        led_LB
-  C:0349H         PUBLIC        main
-  B:0080H.2       PUBLIC        led_LF
-BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  14:38:49  PAGE 3
-
-
-  B:0080H.5       PUBLIC        led_RB
-  B:0080H.6       PUBLIC        led_RF
+  C:020BH         PUBLIC        main
   B:00B0H.7       PUBLIC        linspection
   B:0090H.3       PUBLIC        moto_LB
   B:0090H.4       PUBLIC        moto_LF
   D:0098H         PUBLIC        SCON
   D:0088H         PUBLIC        TCON
+  C:0222H         PUBLIC        __ABS
+BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  22:11:25  PAGE 3
+
+
   B:00B0H.6       PUBLIC        rinspection
   B:0090H.5       PUBLIC        moto_RB
   B:0090H.6       PUBLIC        moto_RF
-  C:023DH         PUBLIC        AvoidanceAndIndicate
-  C:02ABH         PUBLIC        _CarRun
-  B:0080H.4       PUBLIC        led_B
-  B:0080H.7       PUBLIC        led_F
+  C:0114H         PUBLIC        AvoidanceAndIndicate
+  C:0178H         PUBLIC        _CarRun
   D:00C8H         PUBLIC        T2CON
-  B:0080H.1       PUBLIC        led_S
-  C:0327H         PUBLIC        _Delay
+  C:01F0H         PUBLIC        _Delay
   D:00D0H         PUBLIC        PSW
   -------         PROC          MAIN
-  C:0349H         LINE#         29
-  C:0349H         LINE#         30
-  C:0349H         LINE#         32
-  C:034CH         LINE#         33
+  C:020BH         LINE#         30
+  C:020BH         LINE#         31
+  C:020BH         LINE#         32
+  C:0212H         LINE#         33
+  C:0219H         LINE#         36
+  C:0219H         LINE#         37
+  C:0219H         LINE#         38
+  C:0220H         LINE#         49
   -------         ENDPROC       MAIN
   -------         PROC          AVOIDANCEANDINDICATE
-  C:023DH         LINE#         37
-  C:023DH         LINE#         38
-  C:023DH         LINE#         39
-  C:023DH         LINE#         40
-  C:023DH         LINE#         42
-  C:0243H         LINE#         43
-  C:0243H         LINE#         44
-  C:024AH         LINE#         45
-  C:024CH         LINE#         46
-  C:024CH         LINE#         48
-  C:0258H         LINE#         49
-  C:025EH         LINE#         50
-  C:0264H         LINE#         51
-  C:0264H         LINE#         52
-  C:0268H         LINE#         53
-  C:0268H         LINE#         54
-  C:026AH         LINE#         55
-  C:0270H         LINE#         56
-  C:0270H         LINE#         57
-  C:0277H         LINE#         58
-  C:027EH         LINE#         59
-  C:0280H         LINE#         60
-  C:0286H         LINE#         61
-  C:0286H         LINE#         62
-  C:028DH         LINE#         63
-  C:028DH         LINE#         65
-  C:0293H         LINE#         66
-  C:029CH         LINE#         67
-  C:02A2H         LINE#         68
-  C:02A9H         LINE#         69
+  C:0114H         LINE#         53
+  C:0114H         LINE#         54
+  C:0114H         LINE#         55
+  C:0114H         LINE#         56
+  C:0114H         LINE#         58
+  C:011AH         LINE#         59
+  C:011AH         LINE#         60
+  C:0121H         LINE#         61
+  C:0123H         LINE#         62
+  C:0123H         LINE#         64
+  C:012FH         LINE#         65
+  C:0135H         LINE#         66
+  C:013BH         LINE#         67
+  C:013BH         LINE#         68
+  C:013FH         LINE#         70
+  C:0141H         LINE#         71
+  C:0147H         LINE#         72
+  C:0147H         LINE#         73
+  C:014BH         LINE#         75
+  C:014DH         LINE#         76
+  C:0153H         LINE#         77
+  C:0153H         LINE#         78
+  C:015AH         LINE#         79
+  C:015AH         LINE#         81
+  C:0160H         LINE#         82
+  C:0169H         LINE#         83
+  C:016FH         LINE#         84
+  C:0176H         LINE#         85
   -------         ENDPROC       AVOIDANCEANDINDICATE
   -------         PROC          _DELAY
-BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  14:38:49  PAGE 4
-
-
   D:0006H         SYMBOL        num
   -------         DO            
   D:0004H         SYMBOL        temp
   -------         ENDDO         
-  C:0327H         LINE#         80
-  C:0327H         LINE#         81
-  C:0327H         LINE#         82
-  C:0327H         LINE#         83
-  C:0331H         LINE#         84
-  C:0331H         LINE#         85
-  C:0335H         LINE#         86
-  C:0341H         LINE#         88
+  C:01F0H         LINE#         96
+  C:01F0H         LINE#         97
+  C:01F0H         LINE#         98
+  C:01F0H         LINE#         99
+BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  22:11:25  PAGE 4
+
+
+  C:01FAH         LINE#         100
+  C:01FAH         LINE#         101
+  C:01FEH         LINE#         102
+  C:020AH         LINE#         104
   -------         ENDPROC       _DELAY
   -------         PROC          _CARRUN
   D:0007H         SYMBOL        dire
   D:000AH         SYMBOL        mode
-  C:02ABH         LINE#         100
-  C:02ADH         LINE#         101
-  C:02ADH         LINE#         102
-  C:02C1H         LINE#         103
-  C:02C1H         LINE#         104
-  C:02C1H         LINE#         105
-  C:02C3H         LINE#         106
-  C:02C5H         LINE#         107
-  C:02C5H         LINE#         108
-  C:02C7H         LINE#         109
-  C:02C9H         LINE#         110
-  C:02C9H         LINE#         111
-  C:02CBH         LINE#         112
-  C:02CDH         LINE#         113
-  C:02CDH         LINE#         114
-  C:02D2H         LINE#         115
-  C:02D9H         LINE#         116
-  C:02E0H         LINE#         117
-  C:02E4H         LINE#         119
-  C:02E6H         LINE#         120
-  C:02E8H         LINE#         121
-  C:02E8H         LINE#         122
-  C:02EDH         LINE#         123
-  C:02F4H         LINE#         124
-  C:02F9H         LINE#         125
-  C:02FDH         LINE#         127
-  C:0304H         LINE#         128
-  C:0304H         LINE#         129
-  C:0304H         LINE#         130
+  C:0178H         LINE#         116
+  C:017AH         LINE#         117
+  C:017AH         LINE#         118
+  C:018EH         LINE#         119
+  C:018EH         LINE#         120
+  C:018EH         LINE#         121
+  C:0190H         LINE#         122
+  C:0192H         LINE#         123
+  C:0192H         LINE#         126
+  C:0192H         LINE#         127
+  C:0194H         LINE#         128
+  C:0196H         LINE#         129
+  C:0196H         LINE#         130
+  C:019BH         LINE#         131
+  C:01A2H         LINE#         132
+  C:01A9H         LINE#         133
+  C:01ADH         LINE#         135
+  C:01AFH         LINE#         136
+  C:01B1H         LINE#         137
+  C:01B1H         LINE#         138
+  C:01B6H         LINE#         139
+  C:01BDH         LINE#         140
+  C:01C2H         LINE#         141
+  C:01C6H         LINE#         143
+  C:01CDH         LINE#         144
+  C:01CDH         LINE#         145
+  C:01CDH         LINE#         146
   -------         ENDPROC       _CARRUN
+  -------         PROC          __ABS
+  D:0006H         SYMBOL        _origin
+  C:0222H         LINE#         157
+  C:0222H         LINE#         158
+  C:0236H         LINE#         159
+  -------         ENDPROC       __ABS
   -------         PROC          _CARRUNPRO
   D:0007H         SYMBOL        left_rate
   D:0005H         SYMBOL        right_rate
@@ -235,33 +231,60 @@ SYMBOL TABLE OF MODULE:  .\Objects\51STC89C52RC (?C_STARTUP)
   D:0008H         SYMBOL        l
   D:0009H         SYMBOL        r
   -------         ENDDO         
-  C:0003H         LINE#         141
-  C:0003H         LINE#         142
-  C:0003H         LINE#         144
-  C:0016H         LINE#         145
-BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  14:38:49  PAGE 5
+  C:008FH         LINE#         160
+  C:008FH         LINE#         161
+  C:008FH         LINE#         163
+  C:0093H         LINE#         164
+  C:00A7H         LINE#         165
+  C:00A7H         LINE#         166
+  C:00A9H         LINE#         167
+  C:00ABH         LINE#         168
+BL51 BANKED LINKER/LOCATER V6.22                                                      07/24/2020  22:11:25  PAGE 5
 
 
-  C:002CH         LINE#         146
-  C:003FH         LINE#         147
-  C:0055H         LINE#         148
-  C:0072H         LINE#         149
-  C:009CH         LINE#         150
-  C:00CBH         LINE#         151
-  C:00F4H         LINE#         152
-  C:0123H         LINE#         153
-  C:014DH         LINE#         154
-  C:0172H         LINE#         155
-  C:0174H         LINE#         156
-  C:0176H         LINE#         157
-  C:0192H         LINE#         158
-  C:01B0H         LINE#         159
+  C:00ADH         LINE#         169
+  C:00ADH         LINE#         170
+  C:00AFH         LINE#         171
+  C:00B1H         LINE#         172
+  C:00B3H         LINE#         173
+  C:00B3H         LINE#         174
+  C:00B5H         LINE#         175
+  C:00B7H         LINE#         176
+  C:00B7H         LINE#         177
+  C:00B7H         LINE#         178
+  C:00B7H         LINE#         179
+  C:00BBH         LINE#         180
+  C:00CFH         LINE#         181
+  C:00CFH         LINE#         182
+  C:00D1H         LINE#         183
+  C:00D3H         LINE#         184
+  C:00D5H         LINE#         185
+  C:00D5H         LINE#         186
+  C:00D7H         LINE#         187
+  C:00D9H         LINE#         188
+  C:00DBH         LINE#         189
+  C:00DBH         LINE#         190
+  C:00DDH         LINE#         191
+  C:00DFH         LINE#         192
+  C:00DFH         LINE#         193
+  C:00DFH         LINE#         194
+  C:00DFH         LINE#         202
+  C:00E1H         LINE#         203
+  C:00E3H         LINE#         204
+  C:00FAH         LINE#         205
+  C:0113H         LINE#         206
   -------         ENDPROC       _CARRUNPRO
   -------         ENDMOD        AVOIDANCEANDINDICATE
 
   -------         MODULE        ?C?SCDIV
-  C:0305H         PUBLIC        ?C?SCDIV
+  C:01CEH         PUBLIC        ?C?SCDIV
   -------         ENDMOD        ?C?SCDIV
 
-Program Size: data=12.0 xdata=0 code=846
-LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?AVOIDANCEANDINDICATE?AVOIDANCEANDINDICATE
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY?AVOIDANCEANDINDICATE
+
+Program Size: data=12.0 xdata=0 code=574
+LINK/LOCATE RUN COMPLETE.  2 WARNING(S),  0 ERROR(S)
