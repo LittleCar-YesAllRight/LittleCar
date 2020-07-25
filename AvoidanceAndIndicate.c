@@ -1,14 +1,6 @@
 #include "reg52.h"  // keil下请解除这个的注释
 #define ABS_NOT(x) (x<0?~x:x)
-#define digit P0
-// 数字灯
-//sbit led_S=P0^1;  // 中间杠
-//sbit led_LF=P0^2;  // 左前杠
-//sbit led_LB=P0^3;  // 左后杠
-//sbit led_B=P0^4;  // 后杠
-//sbit led_RB=P0^5;  // 右后杠
-//sbit led_RF=P0^6;  // 右前杠
-//sbit led_F=P0^7;  // 前杠
+#define digit P0  // 数字灯
 // 马达
 sbit moto_RF=P1^6;  // 右轮向前    
 sbit moto_RB=P1^5;  // 右轮向后
@@ -20,74 +12,76 @@ sbit rinfrared=P3^5;  // 右红外
 // 巡线串口, 压线为0
 sbit llp=P3^7;  // 左巡线
 sbit rlp=P3^6;  // 右巡线
-void Delay(unsigned short);
-void Avoidance();
+//void Delay(unsigned short);
 void CarRunPro(char left_rate,char right_rate);
-void FlashLightStatus();
+void Avoidance();
 void LPatrol();
+void FlashLightStatus();
 
 int main(void)
 {
     
     while(1)
-		{
-			LPatrol();
-			FlashLightStatus();
-		}
+    {
+        LPatrol();
+        FlashLightStatus();
+    }
 }
 
-// 避障
+/***********************************
+*函数名称：void Avoidance()
+*函数功能：避障
+*参数说明：无参数
+
+***********************************/
 void Avoidance()
 {
-    /*
-        // 避障
-        if(1==linfrared && 1==rinfrared && 0==llp && 0==rlp)  // 没有障碍,并且不压线
-            CarRunPro('F','T');
-        else if(0==linfrared && 1==rinfrared)  // 左边有障碍
-        {
-            CarRun('R','T');
-            //Delay(turn_time);
-        }
-        else if(1==linfrared && 0==rinfrared)  // 右边有障碍
-        {
-            CarRun('L','T');
-            //Delay(turn_time);
-        }
-        else if(0==linfrared && 0==rinfrared)  // 前面有障碍
-        {
-            CarRun('L','B');
-        }
-        //巡线
-        if(0==llp && 1==rlp)
-            CarRunPro(126,-126);
-        else if(1==llp && 0==rlp)
-            CarRunPro(-126,126);
-    }
-*/
-}
+    if(1==linfrared && 1==rinfrared)  // 没有障碍,并且不压线
+        CarRunPro(127,127);
+    else if(0==linfrared && 1==rinfrared)  // 左边有障碍 
+        CarRunPro(127,-127);
+    else if(1==linfrared && 0==rinfrared)  // 右边有障碍 
+        CarRunPro(127,-127);
+    else if(0==linfrared && 0==rinfrared)  // 前面有障碍
+        CarRunPro(-127,0);
 
-//右光感巡线
+}
+/**********************************
+***********************************/
+
+
+/***********************************
+*函数名称：void Avoidance()
+*函数功能：右光感巡线
+*参数说明：无参数
+
+***********************************/
 void LPatrol()
 {
-	if(1==llp && 1==rlp)  // 如果左光感遇到黑线就停，以防万一，也检测一下右光感是否压在黑线上
+	//if(1==llp && 1==rlp)  // 如果左光感遇到黑线就停，以防万一，也检测一下右光感是否压在黑线上
+    if(1==llp)  
     {
         CarRunPro(0,0);  // 停止运行
         return;
     }
     switch(1==rlp){
         case 0:  // 右光感是白色
-            CarRunPro(100,20);  // 往右转圈
+            CarRunPro(100,0);  // 往右转圈
             break;
         case 1:  // 右光感是黑色
-            CarRunPro(20,100);  // 往左转圈
+            CarRunPro(0,100);  // 往左转圈
             break;
     }
+		/*
     switch(1==llp){
         case 1:  // 万一到这里左光感还能是1, 就说明脱轨了, 这时候给他个微调
-            CarRunPro(20,100);  // 往左转圈
+            CarRunPro(0,100);  // 往左转圈
             break;
     }
+		*/
 }
+/**********************************
+***********************************/
 
 
 /***********************************
@@ -95,7 +89,7 @@ void LPatrol()
 *函数功能:延时
 *参数说明:num 延时时间 值最大255
 
-***********************************/
+***********************************
 void Delay(unsigned short num)
 {
     unsigned int temp=0;
@@ -105,8 +99,9 @@ void Delay(unsigned short num)
         while(temp--);
     }
 }
-/**********************************
+**********************************
 ***********************************/
+
 
 /***********************************
 *函数名称：void CarRunPro(char left_rate,char right_rate)
@@ -155,6 +150,7 @@ void CarRunPro(char left_rate,char right_rate)
 /**********************************
 ***********************************/
 
+
 /***********************************
 *函数名称：void FlashLightStatus()
 *函数功能：刷新小车数字灯, 指示小车运行状态
@@ -166,28 +162,31 @@ void FlashLightStatus()
     int status;
     status=1*(1==moto_RF)+2*(1==moto_RB)+3*(1==moto_LF)+6*(1==moto_LB);
     switch(status){
-        case 0:
+        case 0:  // 停止时
             digit=0xFD;  // 中
             break;
-        case 1:
-            digit=0xBF;  // 右前
-            break;
-        case 2:
-            digit=0xDF;  // 右后
-            break;
-        case 3:
+        case 1:  // 只有右轮前进时
             digit=0xFB;  // 左前
             break;
-        case 4:
-            digit=0x7F;  // 前
-            break;
-        case 6:
+        case 2:  // 只有右轮后退时
             digit=0xF7;  // 左后
             break;
-        case 7:
+        case 3:  //  只有左轮前进时
+            digit=0xBF;  // 右前
+            break;
+        case 4:  // 左右轮同时前进时
+            digit=0x7F;  // 前
+            break;
+        case 5:  // 右轮前进左轮后退时
+            digit=0xDB;  // 前
+            break;
+        case 6:  // 左轮后退时
+            digit=0xDF;  // 右后
+            break;
+        case 7:  // 右轮前进左轮后退时
             digit=0xB7;  // 右前左后
             break;
-        case 8:
+        case 8:  // 左右轮同时后退时
             digit=0xD7;  // 后
             break;
     }

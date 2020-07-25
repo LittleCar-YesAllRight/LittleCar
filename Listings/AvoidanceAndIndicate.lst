@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 20:58:23 PAGE 1   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 21:50:08 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE AVOIDANCEANDINDICATE
@@ -62,7 +62,7 @@ line level    source
   52   1              {
   53   1                  CarRun('L','T');
   54   1                  //Delay(turn_time);
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 20:58:23 PAGE 2   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 21:50:08 PAGE 2   
 
   55   1              }
   56   1              else if(0==linfrared && 0==rinfrared)  // 前面有障碍
@@ -89,133 +89,138 @@ line level    source
   76   2          }
   77   1          switch(1==rlp){
   78   2              case 0:  // 右光感是白色
-  79   2                  CarRunPro(100,0);  // 往右转圈
+  79   2                  CarRunPro(100,-10);  // 往右转圈
   80   2                  break;
   81   2              case 1:  // 右光感是黑色
-  82   2                  CarRunPro(0,100);  // 往左转圈
+  82   2                  CarRunPro(-10,100);  // 往左转圈
   83   2                  break;
   84   2          }
-  85   1          switch(1==llp){
-  86   2              case 1:  // 万一到这里左光感还能是1, 就说明脱轨了, 这时候给他个微调
-  87   2                  CarRunPro(0,100);  // 往左转圈
-  88   2                  break;
-  89   2          }
-  90   1      }
-  91          
-  92          
-  93          /***********************************
-  94          *函数名称:void Delay(unsigned short num)
-  95          *函数功能:延时
-  96          *参数说明:num 延时时间 值最大255
-  97          
-  98          ***********************************/
-  99          void Delay(unsigned short num)
- 100          {
- 101   1          unsigned int temp=0;
- 102   1          while(num--)
- 103   1          {
- 104   2              temp=2000;
- 105   2              while(temp--);
- 106   2          }
- 107   1      }
- 108          /**********************************
- 109          ***********************************/
- 110          
- 111          /***********************************
- 112          *函数名称：void CarRunPro(char left_rate,char right_rate)
- 113          *函数功能：行进方向的高级控制
- 114          *参数说明：left_rate/right_rate(-128~127)表示左/右轮跑的速度,数值太小可能会无法驱�
+  85   1          /*
+  86   1          switch(1==llp){
+  87   1              case 1:  // 万一到这里左光感还能是1, 就说明脱轨了, 这时候给他个微调
+  88   1                  CarRunPro(10,100);  // 往左转圈
+  89   1                  break;
+  90   1          }
+  91   1          */
+  92   1      }
+  93          
+  94          
+  95          /***********************************
+  96          *函数名称:void Delay(unsigned short num)
+  97          *函数功能:延时
+  98          *参数说明:num 延时时间 值最大255
+  99          
+ 100          ***********************************/
+ 101          void Delay(unsigned short num)
+ 102          {
+ 103   1          unsigned int temp=0;
+ 104   1          while(num--)
+ 105   1          {
+ 106   2              temp=2000;
+ 107   2              while(temp--);
+ 108   2          }
+ 109   1      }
+ 110          /**********************************
+ 111          ***********************************/
+ 112          
+ 113          /***********************************
+ 114          *函数名称：void CarRunPro(char left_rate,char right_rate)
+ 115          *函数功能：行进方向的高级控制
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 21:50:08 PAGE 3   
+
+ 116          *参数说明：left_rate/right_rate(-128~127)表示左/右轮跑的速度,数值太小可能会无法驱�
              -��,0/-1表示完全不运动
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 20:58:23 PAGE 3   
+ 117          
+ 118          ***********************************/
+ 119          void CarRunPro(char left_rate,char right_rate)
+ 120          {
+ 121   1          static char l=0,r=0;
+ 122   1          if(l <= ABS_NOT(left_rate)){
+ 123   2              if(left_rate > 0){
+ 124   3                  moto_LF = 1;
+ 125   3                  moto_LB = 0;
+ 126   3              }else if(left_rate < -1){
+ 127   3                  moto_LB = 1;
+ 128   3                  moto_LF = 0;
+ 129   3              }else{
+ 130   3                  moto_LB = 0;
+ 131   3                  moto_LF = 0;
+ 132   3              }
+ 133   2          }else{
+ 134   2              moto_LB = 0;
+ 135   2              moto_LF = 0;
+ 136   2          }
+ 137   1          if(r <= ABS_NOT(right_rate)){
+ 138   2              if(right_rate>0){
+ 139   3                  moto_RF = 1;
+ 140   3                  moto_RB = 0;
+ 141   3              }else if(right_rate<-1){
+ 142   3                  moto_RB = 1;
+ 143   3                  moto_RF = 0;
+ 144   3              }else{
+ 145   3                  moto_RB = 0;
+ 146   3                  moto_RF = 0;
+ 147   3              }
+ 148   2          }else{
+ 149   2              moto_RB = 0;
+ 150   2              moto_RB = 0;
+ 151   2          }
+ 152   1          l++;
+ 153   1          r++;
+ 154   1          l%=128;
+ 155   1          r%=128;
+ 156   1      }
+ 157          /**********************************
+ 158          ***********************************/
+ 159          
+ 160          /***********************************
+ 161          *函数名称：void FlashLightStatus()
+ 162          *函数功能：刷新小车数字灯, 指示小车运行状态
+ 163          *参数说明：无参数
+ 164          
+ 165          ***********************************/
+ 166          void FlashLightStatus()
+ 167          {
+ 168   1          int status;
+ 169   1          status=1*(1==moto_RF)+2*(1==moto_RB)+3*(1==moto_LF)+6*(1==moto_LB);
+ 170   1          switch(status){
+ 171   2              case 0:  // 停止时
+ 172   2                  digit=0xFD;  // 中
+ 173   2                  break;
+ 174   2              case 1:  // 只有右轮前进时
+ 175   2                  digit=0xFB;  // 左前
+ 176   2                  break;
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 21:50:08 PAGE 4   
 
- 115          
- 116          ***********************************/
- 117          void CarRunPro(char left_rate,char right_rate)
- 118          {
- 119   1          static char l=0,r=0;
- 120   1          if(l <= ABS_NOT(left_rate)){
- 121   2              if(left_rate > 0){
- 122   3                  moto_LF = 1;
- 123   3                  moto_LB = 0;
- 124   3              }else if(left_rate < -1){
- 125   3                  moto_LB = 1;
- 126   3                  moto_LF = 0;
- 127   3              }else{
- 128   3                  moto_LB = 0;
- 129   3                  moto_LF = 0;
- 130   3              }
- 131   2          }else{
- 132   2              moto_LB = 0;
- 133   2              moto_LF = 0;
- 134   2          }
- 135   1          if(r <= ABS_NOT(left_rate)){
- 136   2              if(right_rate>0){
- 137   3                  moto_RF = 1;
- 138   3                  moto_RB = 0;
- 139   3              }else if(right_rate<-1){
- 140   3                  moto_RB = 1;
- 141   3                  moto_RF = 0;
- 142   3              }else{
- 143   3                  moto_RB = 0;
- 144   3                  moto_RF = 0;
- 145   3              }
- 146   2          }else{
- 147   2              moto_RB = 0;
- 148   2              moto_RB = 0;
- 149   2          }
- 150   1          l++;
- 151   1          r++;
- 152   1          l%=128;
- 153   1          r%=128;
- 154   1      }
- 155          /**********************************
- 156          ***********************************/
- 157          
- 158          /***********************************
- 159          *函数名称：void FlashLightStatus()
- 160          *函数功能：刷新小车数字灯, 指示小车运行状态
- 161          *参数说明：无参数
- 162          
- 163          ***********************************/
- 164          void FlashLightStatus()
- 165          {
- 166   1          int status;
- 167   1          status=1*(1==moto_RF)+2*(1==moto_RB)+3*(1==moto_LF)+6*(1==moto_LB);
- 168   1          switch(status){
- 169   2              case 0:
- 170   2                  digit=0xFD;  // 中
- 171   2                  break;
- 172   2              case 1:
- 173   2                  digit=0xBF;  // 右前
- 174   2                  break;
- 175   2              case 2:
- 176   2                  digit=0xDF;  // 右后
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 20:58:23 PAGE 4   
-
- 177   2                  break;
- 178   2              case 3:
- 179   2                  digit=0xFB;  // 左前
- 180   2                  break;
- 181   2              case 4:
- 182   2                  digit=0x7F;  // 前
- 183   2                  break;
- 184   2              case 6:
- 185   2                  digit=0xF7;  // 左后
- 186   2                  break;
- 187   2              case 7:
- 188   2                  digit=0xB7;  // 右前左后
- 189   2                  break;
- 190   2              case 8:
- 191   2                  digit=0xD7;  // 后
- 192   2                  break;
- 193   2          }
- 194   1      }
- 195          /**********************************
- 196          ***********************************/
+ 177   2              case 2:  // 只有右轮后退时
+ 178   2                  digit=0xF7;  // 左后
+ 179   2                  break;
+ 180   2              case 3:  //  只有左轮前进时
+ 181   2                  digit=0xBF;  // 右前
+ 182   2                  break;
+ 183   2              case 4:  // 左右轮同时前进时
+ 184   2                  digit=0x7F;  // 前
+ 185   2                  break;
+ 186   2              case 5:  // 右轮前进左轮后退时
+ 187   2                  digit=0xDB;  // 前
+ 188   2                  break;
+ 189   2              case 6:  // 左轮后退时
+ 190   2                  digit=0xDF;  // 右后
+ 191   2                  break;
+ 192   2              case 7:  // 右轮前进左轮后退时
+ 193   2                  digit=0xB7;  // 右前左后
+ 194   2                  break;
+ 195   2              case 8:  // 左右轮同时后退时
+ 196   2                  digit=0xD7;  // 后
+ 197   2                  break;
+ 198   2          }
+ 199   1      }
+ 200          /**********************************
+ 201          ***********************************/
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    400    ----
+   CODE SIZE        =    387    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
