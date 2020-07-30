@@ -1,4 +1,4 @@
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 21:50:08 PAGE 1   
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/30/2020 21:21:11 PAGE 1   
 
 
 C51 COMPILER V9.54, COMPILATION OF MODULE AVOIDANCEANDINDICATE
@@ -10,221 +10,191 @@ line level    source
 
    1          #include "reg52.h"  // keil下请解除这个的注释
    2          #define ABS_NOT(x) (x<0?~x:x)
-   3          #define digit P0
-   4          // 数字灯
-   5          //sbit led_S=P0^1;  // 中间杠
-   6          //sbit led_LF=P0^2;  // 左前杠
-   7          //sbit led_LB=P0^3;  // 左后杠
-   8          //sbit led_B=P0^4;  // 后杠
-   9          //sbit led_RB=P0^5;  // 右后杠
-  10          //sbit led_RF=P0^6;  // 右前杠
-  11          //sbit led_F=P0^7;  // 前杠
-  12          // 马达
-  13          sbit moto_RF=P1^6;  // 右轮向前    
-  14          sbit moto_RB=P1^5;  // 右轮向后
-  15          sbit moto_LF=P1^4;  // 左轮向前
-  16          sbit moto_LB=P1^3;  // 左轮向后
-  17          // 红外避障串口,有障碍为0
-  18          sbit linfrared=P3^4;  // 左红外
-  19          sbit rinfrared=P3^5;  // 右红外
-  20          // 巡线串口, 压线为0
-  21          sbit llp=P3^7;  // 左巡线
-  22          sbit rlp=P3^6;  // 右巡线
-  23          void Delay(unsigned short);
-  24          void Avoidance();
-  25          void CarRunPro(char left_rate,char right_rate);
-  26          void FlashLightStatus();
-  27          void LPatrol();
-  28          
-  29          int main(void)
-  30          {
-  31   1          
-  32   1          while(1)
-  33   1          {
-  34   2            LPatrol();
-  35   2            FlashLightStatus();
-  36   2          }
-  37   1      }
-  38          
-  39          // 避障
-  40          void Avoidance()
+   3          #define digit P0  // 数字灯
+   4          // 马达
+   5          sbit moto_RF=P1^3;  // 右轮向前    
+   6          sbit moto_RB=P1^2;  // 右轮向后
+   7          sbit moto_LF=P1^1;  // 左轮向前
+   8          sbit moto_LB=P1^0;  // 左轮向后
+   9          sbit ena=P1^4;  // 使能A，用于左轮PWM调速
+  10          sbit enb=P1^5;  // 使能B，用于右轮PWM调速
+  11          // 红外避障串口,有障碍为0
+  12          sbit linfrared=P3^4;  // 左红外
+  13          sbit rinfrared=P3^5;  // 右红外
+  14          // 巡线串口, 压线为0
+  15          sbit llp=P3^7;  // 左巡线
+  16          sbit rlp=P3^6;  // 右巡线
+  17          sbit led1=P0^1;
+  18          
+  19          //void Delay(unsigned short);
+  20          void init_sys(void);
+  21          void CarRunPro(char left_rate,char right_rate);
+  22          void Avoidance(void);
+  23          void FlashLightStatus(void);
+  24          char ldutyfactor=127;
+  25          char rdutyfactor=127;
+  26          
+  27          int main(void)
+  28          {
+  29   1          init_sys();
+  30   1          while(1)
+  31   1          {
+  32   2            CarRunPro(10,10);
+  33   2              //Avoidance();
+  34   2              //Patrol();
+  35   2              
+  36   2              //FlashLightStatus();
+  37   2          }
+  38   1      }
+  39          
+  40          void init_sys()
   41          {
-  42   1          /*
-  43   1              // 避障
-  44   1              if(1==linfrared && 1==rinfrared && 0==llp && 0==rlp)  // 没有障碍,并且不压线
-  45   1                  CarRunPro('F','T');
-  46   1              else if(0==linfrared && 1==rinfrared)  // 左边有障碍
-  47   1              {
-  48   1                  CarRun('R','T');
-  49   1                  //Delay(turn_time);
-  50   1              }
-  51   1              else if(1==linfrared && 0==rinfrared)  // 右边有障碍
-  52   1              {
-  53   1                  CarRun('L','T');
-  54   1                  //Delay(turn_time);
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 21:50:08 PAGE 2   
+  42   1          TMOD=0x01;
+  43   1          TH0=0xFF;
+  44   1          TL0=0xF6;
+  45   1          TR0=1;
+  46   1          ET0=1;
+  47   1          EA=1;
+  48   1      }
+  49          
+  50          /***********************************
+  51          *函数名称：void Avoidance()
+  52          *函数功能：避障
+  53          *参数说明：无参数
+  54          
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/30/2020 21:21:11 PAGE 2   
 
-  55   1              }
-  56   1              else if(0==linfrared && 0==rinfrared)  // 前面有障碍
-  57   1              {
-  58   1                  CarRun('L','B');
-  59   1              }
-  60   1              //巡线
-  61   1              if(0==llp && 1==rlp)
-  62   1                  CarRunPro(126,-126);
-  63   1              else if(1==llp && 0==rlp)
-  64   1                  CarRunPro(-126,126);
-  65   1          }
-  66   1      */
-  67   1      }
-  68          
-  69          //右光感巡线
-  70          void LPatrol()
-  71          {
-  72   1        if(1==llp && 1==rlp)  // 如果左光感遇到黑线就停，以防万一，也检测一下右光感是�
-             -�压在黑线上
-  73   1          {
-  74   2              CarRunPro(0,0);  // 停止运行
-  75   2              return;
-  76   2          }
-  77   1          switch(1==rlp){
-  78   2              case 0:  // 右光感是白色
-  79   2                  CarRunPro(100,-10);  // 往右转圈
-  80   2                  break;
-  81   2              case 1:  // 右光感是黑色
-  82   2                  CarRunPro(-10,100);  // 往左转圈
-  83   2                  break;
-  84   2          }
-  85   1          /*
-  86   1          switch(1==llp){
-  87   1              case 1:  // 万一到这里左光感还能是1, 就说明脱轨了, 这时候给他个微调
-  88   1                  CarRunPro(10,100);  // 往左转圈
-  89   1                  break;
-  90   1          }
-  91   1          */
-  92   1      }
-  93          
-  94          
-  95          /***********************************
-  96          *函数名称:void Delay(unsigned short num)
-  97          *函数功能:延时
-  98          *参数说明:num 延时时间 值最大255
-  99          
- 100          ***********************************/
- 101          void Delay(unsigned short num)
- 102          {
- 103   1          unsigned int temp=0;
- 104   1          while(num--)
- 105   1          {
- 106   2              temp=2000;
- 107   2              while(temp--);
- 108   2          }
- 109   1      }
- 110          /**********************************
- 111          ***********************************/
+  55          ***********************************/
+  56          void Avoidance()
+  57          {
+  58   1          if(1==linfrared && 1==rinfrared)  // 没有障碍,并且不压线
+  59   1              CarRunPro(127,127);
+  60   1          else if(0==linfrared && 1==rinfrared)  // 左边有障碍 
+  61   1              CarRunPro(127,-127);
+  62   1          else if(1==linfrared && 0==rinfrared)  // 右边有障碍 
+  63   1              CarRunPro(-127,127);
+  64   1          else if(0==linfrared && 0==rinfrared)  // 前面有障碍
+  65   1              CarRunPro(-127,0);
+  66   1      }
+  67          /**********************************
+  68          ***********************************/
+  69          
+  70          /***********************************
+  71          *函数名称：void CarRunPro()
+  72          *函数功能：PWM控制的小车行驶函数
+  73          *参数说明：left_rate和right_rate为占空比,范围-100~100,0未停止
+  74          
+  75          ***********************************/
+  76          void CarRunPro(char left_rate,char right_rate)
+  77          {
+  78   1          rdutyfactor=right_rate;
+  79   1          ldutyfactor=left_rate;
+  80   1          // 左轮
+  81   1          if (left_rate>0)
+  82   1          {
+  83   2              moto_LF=1;
+  84   2              moto_LB=0;
+  85   2          }else if (left_rate<-1)
+  86   1          {
+  87   2              moto_LF=0;
+  88   2              moto_LB=1;
+  89   2          }else
+  90   1          {
+  91   2              moto_LF=0;
+  92   2              moto_LB=0;
+  93   2          }
+  94   1          // 右轮
+  95   1          if (right_rate>0)
+  96   1          {
+  97   2              moto_RF=1;
+  98   2              moto_RB=0;
+  99   2          }else if (right_rate<-1)
+ 100   1          {
+ 101   2              moto_RF=0;
+ 102   2              moto_RB=1;
+ 103   2          }else
+ 104   1          {
+ 105   2              moto_RF=0;
+ 106   2              moto_RB=0;
+ 107   2          }
+ 108   1      }
+ 109          /**********************************
+ 110          ***********************************/
+ 111          
  112          
- 113          /***********************************
- 114          *函数名称：void CarRunPro(char left_rate,char right_rate)
- 115          *函数功能：行进方向的高级控制
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 21:50:08 PAGE 3   
+ 113          
+ 114          /***********************************
+ 115          *函数名称：void FlashLightStatus()
+ 116          *函数功能：刷新小车数字灯, 指示小车运行状态
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/30/2020 21:21:11 PAGE 3   
 
- 116          *参数说明：left_rate/right_rate(-128~127)表示左/右轮跑的速度,数值太小可能会无法驱�
-             -��,0/-1表示完全不运动
- 117          
- 118          ***********************************/
- 119          void CarRunPro(char left_rate,char right_rate)
- 120          {
- 121   1          static char l=0,r=0;
- 122   1          if(l <= ABS_NOT(left_rate)){
- 123   2              if(left_rate > 0){
- 124   3                  moto_LF = 1;
- 125   3                  moto_LB = 0;
- 126   3              }else if(left_rate < -1){
- 127   3                  moto_LB = 1;
- 128   3                  moto_LF = 0;
- 129   3              }else{
- 130   3                  moto_LB = 0;
- 131   3                  moto_LF = 0;
- 132   3              }
- 133   2          }else{
- 134   2              moto_LB = 0;
- 135   2              moto_LF = 0;
- 136   2          }
- 137   1          if(r <= ABS_NOT(right_rate)){
- 138   2              if(right_rate>0){
- 139   3                  moto_RF = 1;
- 140   3                  moto_RB = 0;
- 141   3              }else if(right_rate<-1){
- 142   3                  moto_RB = 1;
- 143   3                  moto_RF = 0;
- 144   3              }else{
- 145   3                  moto_RB = 0;
- 146   3                  moto_RF = 0;
- 147   3              }
- 148   2          }else{
- 149   2              moto_RB = 0;
- 150   2              moto_RB = 0;
- 151   2          }
- 152   1          l++;
- 153   1          r++;
- 154   1          l%=128;
- 155   1          r%=128;
- 156   1      }
- 157          /**********************************
- 158          ***********************************/
- 159          
- 160          /***********************************
- 161          *函数名称：void FlashLightStatus()
- 162          *函数功能：刷新小车数字灯, 指示小车运行状态
- 163          *参数说明：无参数
- 164          
- 165          ***********************************/
- 166          void FlashLightStatus()
- 167          {
- 168   1          int status;
- 169   1          status=1*(1==moto_RF)+2*(1==moto_RB)+3*(1==moto_LF)+6*(1==moto_LB);
- 170   1          switch(status){
- 171   2              case 0:  // 停止时
- 172   2                  digit=0xFD;  // 中
- 173   2                  break;
- 174   2              case 1:  // 只有右轮前进时
- 175   2                  digit=0xFB;  // 左前
- 176   2                  break;
-C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/25/2020 21:50:08 PAGE 4   
-
- 177   2              case 2:  // 只有右轮后退时
- 178   2                  digit=0xF7;  // 左后
- 179   2                  break;
- 180   2              case 3:  //  只有左轮前进时
- 181   2                  digit=0xBF;  // 右前
- 182   2                  break;
- 183   2              case 4:  // 左右轮同时前进时
- 184   2                  digit=0x7F;  // 前
- 185   2                  break;
- 186   2              case 5:  // 右轮前进左轮后退时
- 187   2                  digit=0xDB;  // 前
- 188   2                  break;
- 189   2              case 6:  // 左轮后退时
- 190   2                  digit=0xDF;  // 右后
- 191   2                  break;
- 192   2              case 7:  // 右轮前进左轮后退时
- 193   2                  digit=0xB7;  // 右前左后
- 194   2                  break;
- 195   2              case 8:  // 左右轮同时后退时
- 196   2                  digit=0xD7;  // 后
- 197   2                  break;
- 198   2          }
- 199   1      }
- 200          /**********************************
- 201          ***********************************/
+ 117          *参数说明：无参数
+ 118          
+ 119          ***********************************/
+ 120          void FlashLightStatus()
+ 121          {
+ 122   1          int status;
+ 123   1          status=1*(1==moto_RF)+2*(1==moto_RB)+3*(1==moto_LF)+6*(1==moto_LB);
+ 124   1          switch(status){
+ 125   2              case 0:  // 停止时
+ 126   2                  digit=0xFD;  // 中
+ 127   2                  break;
+ 128   2              case 1:  // 只有右轮前进时
+ 129   2                  digit=0xFB;  // 左前
+ 130   2                  break;
+ 131   2              case 2:  // 只有右轮后退时
+ 132   2                  digit=0xF7;  // 左后
+ 133   2                  break;
+ 134   2              case 3:  //  只有左轮前进时
+ 135   2                  digit=0xBF;  // 右前
+ 136   2                  break;
+ 137   2              case 4:  // 左右轮同时前进时
+ 138   2                  digit=0x7F;  // 前
+ 139   2                  break;
+ 140   2              case 5:  // 右轮前进左轮后退时
+ 141   2                  digit=0xDB;  // 前
+ 142   2                  break;
+ 143   2              case 6:  // 左轮后退时
+ 144   2                  digit=0xDF;  // 右后
+ 145   2                  break;
+ 146   2              case 7:  // 右轮前进左轮后退时
+ 147   2                  digit=0xB7;  // 右前左后
+ 148   2                  break;
+ 149   2              case 8:  // 左右轮同时后退时
+ 150   2                  digit=0xD7;  // 后
+ 151   2                  break;
+ 152   2          }
+ 153   1      }
+ 154          /**********************************
+ 155          ***********************************/
+ 156          
+ 157          void timer0(void) interrupt 1 using 2
+ 158          {
+ 159   1        static char l=0,r=0;
+ 160   1        
+ 161   1          if(l<ldutyfactor)
+ 162   1            ena=1;
+ 163   1            else
+ 164   1              ena=0;
+ 165   1        if(r<rdutyfactor)
+ 166   1          enb=1;
+ 167   1        else
+ 168   1          enb=0;
+ 169   1            TH0=0xFF;
+ 170   1          TL0=0xF6;
+ 171   1        l=(l+1)%128;
+ 172   1        r=(r+1)%128;
+ 173   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    387    ----
+   CODE SIZE        =    410    ----
    CONSTANT SIZE    =   ----    ----
+C51 COMPILER V9.54   AVOIDANCEANDINDICATE                                                  07/30/2020 21:21:11 PAGE 4   
+
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      2    ----
+   DATA SIZE        =      4    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
